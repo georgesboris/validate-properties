@@ -1,48 +1,57 @@
 # validate-properties
 
-[![Travis][build-badge]][build]
-[![npm package][npm-badge]][npm]
-[![Coveralls][coveralls-badge]][coveralls]
-
 Validates the properties of a passed object using a minimalistic API.
+
+```
+yarn add validate-properties
+```
+
+## Examples
+
+First we will check if the object **has all the passed properties**.
+A property is defined if it's value is not undefined and if it's not a blank string.
 
 ```javascript
 import validate from 'validate-properties'
 
-// checks if the object has both 'a' and 'b' properties.
-validate({}, ['a', 'b'])
-
-// checks if the object has at least one of the 'a' or 'b' properties.
-validate({}, [['a', 'b']])
-
-// checks if the object 'a' property is equal to it's 'b' property.
-validate({}, [({a , b}) => a === b])
-
-// it accepts an array so this can all be sequenced
-validate({}, [
-  // it must have an 'a' prop
-  'a',
-  // it must have at least one of the 'b' or 'c' prop
-  ['b', 'c'],
-  // it's 'd' prop must be equal to the letter 'd'
-  ({ d }) => d === 'd'
-]);
-
-// it returns a boolean by default,
-// but it can also return an array with the validations that did not pass
-// this is useful for debugging or for displaying errors on the UI
-const errors = validate({}, ['a'], true)
-
-// in the above case the errors array would be equal to:
-// [{ index: 0, validation: 'a' }]
-
+validate({ a: 1 }, ['a', 'b']) // false
 ```
 
-[build-badge]: https://img.shields.io/travis/user/repo/master.png?style=flat-square
-[build]: https://travis-ci.org/user/repo
+Then we will check if the object has **any of the passed properties**.
+Notice that we are defining this validation as an array within the properties array.
 
-[npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat-square
-[npm]: https://www.npmjs.org/package/npm-package
+```javascript
+import validate from 'validate-properties'
 
-[coveralls-badge]: https://img.shields.io/coveralls/user/repo/master.png?style=flat-square
-[coveralls]: https://coveralls.io/github/user/repo
+validate({ a: 1 }, [['a', 'b']]) // true
+```
+
+Now we will pass a **custom validation function**.
+
+```javascript
+import validate from 'validate-properties'
+
+validate({ a: 1, b: 1 }, [({a , b}) => a === b]) // true
+```
+
+At last, we will check for **multiple validations** by passing all these values together in an array.
+
+```javascript
+import validate from 'validate-properties'
+
+validate({ a: 1, b: 2, d: 3 }, [
+  'a',
+  ['a', 'b'],
+  ({ a, b }) => a === b
+]) // false
+```
+
+Normally, we will only return a boolean containing the validation result.
+But we can also return an array containing all the validations that have failed.
+This can be useful for debugging and displaying form errors.
+
+```javascript
+import validate from 'validate-properties'
+
+validate({ a: 1 }, ['a', 'b'], true) // [{ index: 1, validation: 'b' }]
+```
