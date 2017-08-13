@@ -1,6 +1,6 @@
 {
   "name": "validate-properties",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Describe validate-properties here",
   "main": "lib/index.js",
   "module": "es/index.js",
