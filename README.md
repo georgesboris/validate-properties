@@ -37,7 +37,7 @@ validate({ a: 1, b: 2 }, [
   'a',                     // true
   ['a', 'b'],              // true
   ({ a, b }) => a === b    // false
-]) // false
+])                         // -> false
 ```
 
 ### Checking failed validations 
